@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            html, body {
+                font-family: Arial, sans-serif;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            
+            #map {
+                height: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div id = "map"></div>
+        
+        <script>
+            var map;
+            function initMap() {
+                // instantiate a map object
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: 35.7875, lng: -78.6764} ,
+                    zoom: 13
+                });
+                var bounds = new google.maps.LatLngBounds();
+                /*
+                // creates a marker on the map
+                var place = {lat:40, lng:-74};
+                var marker = new google.maps.Marker({
+                    position: place,
+                    map: map,
+                    title: 'First Marker!!!'
+                });
+                
+                // creates a info window
+                var infoWindow = new google.maps.InfoWindow({
+                    content: '<p>Do you ever feel like an InfoWindow?<\p>' + 
+                            '<p>Floating in the wind?<\p>' 
+                });
+                
+                var infoWindowOpen = false;
+                // add listener to open infowindow when marker clicked.
+                marker.addListener('click', function() {
+                    if (infoWindowOpen) {
+                        infoWindow.close();
+                        infoWindowOpen = false;
+                    } else {
+                        infoWindow.open(map, marker);
+                        infoWindowOpen = true;
+                    }
+                });
+                */
+                
+                var markers = [];
+                var locations = [
+                    {title: "James Hunt Library", position: {lat: 35.7693, lng: -78.6764}},
+                    {title: "D.H. Hill Library", position: {lat: 35.7875, lng: -78.6696}},
+                    {title: "Fountain Dining Hall", position: {lat: 35.77304, lng: -78.6729}},
+                ];
+                
+                var infoWindow = new google.maps.InfoWindow();
+                infoWindow.addListener('closeclick', function(){
+                   infoWindow.marker = null; 
+                });
+                
+                for (var i = 0; i < locations.length; i++) {
+                    var marker = new google.maps.Marker({
+                       map: map,
+                       position: locations[i].position,
+                       title: locations[i].title,
+                       animation: google.maps.Animation.DROP,
+                       id: i
+                    });
+                    
+                    marker.addListener('click', function(){
+                        populateInfoWindow(this, infoWindow);
+                    });
+                    
+                    bounds.extend(marker.position);
+                    
+                    markers.push(marker);
+                }
+                
+                map.fitBounds(bounds);
+                
+                function populateInfoWindow(marker, infoWindow) {
+                    if (infoWindow.marker != marker) {
+                        infoWindow.marker = marker;
+                        infoWindow.setContent('<div>' + marker.title + '<\div>');
+                        infoWindow.open(map, marker);
+                    }
+                }
+            }
+        </script>
+        
+        <script async defer 
+            src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCXViagTReotB5kxkll2-5GdZs9DRVg2-8&v=3&callback=initMap">
+        </script>
+    </body>
+</html>
